@@ -32,21 +32,22 @@ const RegisterPage = () => {
   return (
     <div style={{ maxWidth: '460px', margin: '4rem auto', padding: '0 1rem' }}>
       <div className="card" style={{ padding: '2.5rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>
-          Create an Account
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+          Create Account
         </h2>
-        <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          Join LuxeStay to easily find, reserve, and manage luxury rooms
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.5rem' }}>
+          Join LuxeStay to easily reserve and manage hotel suites
         </p>
 
         {error && (
           <div style={{
-            background: '#fef2f2',
-            color: '#b91c1c',
-            padding: '0.75rem',
-            borderRadius: '8px',
+            background: 'var(--danger-light)',
+            color: 'var(--danger)',
+            padding: '0.75rem 1rem',
+            borderRadius: 'var(--radius-sm)',
             marginBottom: '1rem',
-            fontSize: '0.85rem'
+            fontSize: '0.85rem',
+            border: '1px solid rgba(239, 68, 68, 0.2)'
           }}>
             {error}
           </div>
@@ -54,7 +55,7 @@ const RegisterPage = () => {
 
         <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.35rem' }}>
+            <label style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)', display: 'block', marginBottom: '0.35rem' }}>
               Full Name
             </label>
             <input
@@ -67,7 +68,7 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.35rem' }}>
+            <label style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)', display: 'block', marginBottom: '0.35rem' }}>
               Email Address
             </label>
             <input
@@ -80,7 +81,7 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '0.35rem' }}>
+            <label style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)', display: 'block', marginBottom: '0.35rem' }}>
               Password
             </label>
             <input
@@ -97,9 +98,9 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: '#64748b' }}>
+        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ color: '#2563eb', fontWeight: 600 }}>Sign in</Link>
+          <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign in</Link>
         </div>
       </div>
     </div>

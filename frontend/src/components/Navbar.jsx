@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Hotel, User, LogOut, ShieldCheck, Sparkles } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Hotel, LogOut, ShieldCheck, Sun, Moon, MessageSquare } from 'lucide-react';
 
-const Navbar = ({ onOpenAI }) => {
+const Navbar = () => {
   const { user, logout } = useAuth();
+  const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,63 +14,142 @@ const Navbar = ({ onOpenAI }) => {
     navigate('/login');
   };
 
+  const getRoleBadge = (role) => {
+    switch (role) {
+      case 'PRODUCT_ADMIN':
+        return 'Admin';
+      case 'ORGANIZATION_ADMIN':
+        return 'Organization Admin';
+      case 'RECEPTIONIST':
+        return 'Receptionist';
+      case 'CUSTOMER':
+        return 'Customer';
+      default:
+        return role;
+    }
+  };
+
+  const isAdmin = user && (user.role === 'PRODUCT_ADMIN' || user.role === 'ORGANIZATION_ADMIN');
+
   return (
     <header style={{
-      background: '#ffffff',
+      background: 'var(--nav-bg)',
+      backdropFilter: 'blur(10px)',
       borderBottom: '1px solid var(--border)',
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      padding: '0.85rem 2rem'
+      padding: '0.85rem 2rem',
+      transition: 'background-color 0.25s ease, border-color 0.25s ease'
     }}>
       <div style={{
         maxWidth: '1280px',
         margin: '0 auto',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem', flexWrap: 'wrap' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
             <div style={{
-              background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-              padding: '0.5rem',
+              background: 'linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%)',
+              padding: '0.55rem',
               borderRadius: '10px',
               display: 'flex',
-              color: 'white'
+              color: 'white',
+              boxShadow: '0 2px 6px var(--primary-glow)'
             }}>
               <Hotel size={22} />
             </div>
             <div>
-              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>
-                LUXE<span style={{ color: '#2563eb' }}>STAY</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
+                LUXE<span style={{ color: 'var(--primary)' }}>STAY</span>
               </span>
-              <span style={{ fontSize: '0.7rem', display: 'block', color: '#64748b', fontWeight: 600, marginTop: '-3px' }}>
-                HOTEL MANAGEMENT SYSTEM
+              <span style={{ fontSize: '0.68rem', display: 'block', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+                HOTELS & RESORTS
               </span>
             </div>
           </Link>
 
-          <nav style={{ display: 'flex', gap: '1.25rem' }}>
-            <Link to="/" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
-              Explore Hotels
+          <nav style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Link
+              to="/"
+              style={{
+                fontSize: '0.92rem',
+                fontWeight: 600,
+                color: 'var(--text-main)',
+                padding: '0.35rem 0.6rem',
+                borderRadius: '6px'
+              }}
+            >
+              Browse Hotels
+            </Link>
+
+            {/* Chatbot Concierge Assistant Page */}
+            <Link
+              to="/concierge"
+              style={{
+                fontSize: '0.92rem',
+                fontWeight: 600,
+                color: 'var(--primary)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}
+            >
+              <MessageSquare size={16} /> Concierge Assistant
             </Link>
 
             {user && (
               <>
                 {user.role === 'CUSTOMER' && (
-                  <Link to="/my-bookings" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+                  <Link
+                    to="/my-bookings"
+                    style={{
+                      fontSize: '0.92rem',
+                      fontWeight: 600,
+                      color: 'var(--text-muted)'
+                    }}
+                  >
                     My Bookings
                   </Link>
                 )}
+
                 {(user.role === 'ORGANIZATION_ADMIN' || user.role === 'RECEPTIONIST') && (
-                  <Link to="/staff-dashboard" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#2563eb', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <ShieldCheck size={16} /> Staff Console
+                  <Link
+                    to="/staff-dashboard"
+                    style={{
+                      fontSize: '0.92rem',
+                      fontWeight: 600,
+                      color: 'var(--primary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem'
+                    }}
+                  >
+                    <ShieldCheck size={16} /> Staff Operations
                   </Link>
                 )}
-                {user.role === 'PRODUCT_ADMIN' && (
-                  <Link to="/platform-admin" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#7c3aed', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <ShieldCheck size={16} /> Platform Admin
+
+                {/* Exclusive Admin Section */}
+                {isAdmin && (
+                  <Link
+                    to="/admin-console"
+                    style={{
+                      fontSize: '0.92rem',
+                      fontWeight: 700,
+                      color: '#9333ea',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      background: 'rgba(147, 51, 234, 0.1)',
+                      padding: '0.3rem 0.75rem',
+                      borderRadius: '6px'
+                    }}
+                  >
+                    <ShieldCheck size={16} /> Admin Console
                   </Link>
                 )}
               </>
@@ -77,49 +158,54 @@ const Navbar = ({ onOpenAI }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* AI Assistant Trigger Button */}
+          {/* Dark Mode Toggle */}
           <button
-            onClick={onOpenAI}
+            onClick={toggleTheme}
             style={{
-              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-              color: 'white',
-              borderRadius: '9999px',
-              padding: '0.45rem 1rem',
+              padding: '0.5rem',
+              borderRadius: '8px',
+              background: 'var(--bg-hover)',
+              color: 'var(--text-main)',
+              border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.45rem',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)'
+              justifyContent: 'center',
+              width: '38px',
+              height: '38px'
             }}
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <Sparkles size={16} />
-            AI Booking Assistant
+            {darkMode ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#64748b" />}
           </button>
 
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>{user.name}</div>
-                <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>{user.role}</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                  {user.name}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600 }}>
+                  {getRoleBadge(user.role)}
+                </div>
               </div>
               <button
                 onClick={handleLogout}
                 style={{
-                  color: '#64748b',
-                  padding: '0.45rem',
+                  color: 'var(--text-muted)',
+                  padding: '0.5rem',
                   borderRadius: '8px',
-                  background: '#f1f5f9',
+                  background: 'var(--bg-hover)',
+                  border: '1px solid var(--border)',
                   display: 'flex',
                   alignItems: 'center'
                 }}
                 title="Logout"
               >
-                <LogOut size={17} />
+                <LogOut size={16} />
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
               <Link to="/login" className="btn-secondary" style={{ padding: '0.45rem 0.95rem', fontSize: '0.85rem' }}>
                 Sign In
               </Link>

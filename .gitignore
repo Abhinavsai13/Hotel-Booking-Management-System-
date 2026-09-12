@@ -1,0 +1,8 @@
+venv
+backend/__pycache__
+frontend/__pycache__
+backend/hotel_booking.db
+backend/.venv
+backend/app/__pycache__
+backend/app/__pycache__
+backend/tests
